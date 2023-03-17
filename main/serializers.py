@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Category, Item, ItemMaterials, Material, Part, Pattern
 
+
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
@@ -14,6 +15,7 @@ class ItemSerializer(serializers.ModelSerializer):
             "patina",
             "patinad"
         )
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,9 +35,10 @@ class PartSerializer(serializers.ModelSerializer):
             "name",
             "model",
             "default",
-            "bumpmap", 
+            "bumpmap",
             "get_model",
         )
+
 
 class ItemMaterialsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,7 +47,8 @@ class ItemMaterialsSerializer(serializers.ModelSerializer):
             "part",
             "material",
         )
-        
+
+
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
@@ -55,6 +59,7 @@ class MaterialSerializer(serializers.ModelSerializer):
             "bumpmap"
         )
 
+
 class PatternSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pattern
@@ -62,7 +67,7 @@ class PatternSerializer(serializers.ModelSerializer):
             "id",
             "material",
             "shininess",
-            "icon", 
+            "icon",
             "name",
             "color",
             "texture",

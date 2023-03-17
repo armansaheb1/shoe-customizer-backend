@@ -18,11 +18,7 @@ urlpatterns = [
     path('material' , views.material.as_view() , name='material'),
     path('material/<int:id>' , views.material.as_view() , name='material'),
     path('materials/<int:id>' , views.materials.as_view() , name='materials'),
-    path('pattern' , views.pattern.as_view() , name='pattern'),
-    path('pattern/<int:id>' , views.pattern.as_view() , name='pattern'),
-    path('patterns/<int:id>' , views.patterns.as_view() , name='patterns'),
     path('itemparts/<int:id>' , views.itemparts.as_view() , name='itemparts'),
-    path('pattern' , views.patterns.as_view() , name='pattern'),
     path('itemmaterials/<int:id>' , views.itemmaterials.as_view() , name='itemmaterials'),
     path('itemmaterial' , views.itemmaterials.as_view() , name='itemmaterials'),
 

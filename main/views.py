@@ -1,7 +1,7 @@
 from email.policy import default
 from pickle import TRUE
 from django.shortcuts import render
-from .serializers import CategorySerializer, ItemMaterialsSerializer, ItemSerializer, MaterialSerializer, PartSerializer, PatternSerializer
+from .serializers import CategorySerializer, ItemMaterialsSerializer, ItemSerializer, MaterialSerializer, PartSerializer
 from .models import Category, Item, ItemMaterials, Material , Part, Pattern
 from django.http import HttpResponse , Http404 
 from rest_framework.views import APIView 
@@ -151,57 +151,6 @@ class materials(APIView):
         return Response(serializer.data)
 
 
-
-class pattern(APIView):
-
-
-    def get_object(self):
-        try:
-            return Pattern.objects.all()
-        except Pattern.DoesNotExist:
-            return Http404
-            
-    def get(self , request , format = None):
-        query = self.get_object()
-        serializer = PatternSerializer(query , many=True)
-        return Response(serializer.data)
-
-
-
-    def post(self , request , format = None):
-        serializer = PatternSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors,status= status.HTTP_404_NOT_FOUND)
-
-    def put(self , request , id , format = None):
-        query = Pattern.objects.get(id = id)
-        serializer = PatternSerializer(query,  data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-        return Response(status=status.HTTP_201_CREATED)
-
-    def delete(self , request, id , format = None):
-        query = Pattern.objects.get(id = id)
-        query.delete()
-        return Response(status=status.HTTP_201_CREATED)
-
-class patterns(APIView):
-
-    def get_object(self , id):
-        try:
-            return Pattern.objects.filter(material = id)
-        except Pattern.DoesNotExist:
-            return Http404
-            
-    def get(self , request , id , format = None):
-        query = self.get_object(id)
-        serializer = PatternSerializer(query , many=True)
-        return Response(serializer.data)
-
 class itemparts(APIView):
 
     def get_object(self , id):
@@ -236,25 +185,30 @@ class category(APIView):
         else:
             return Response(serializer.errors,status= status.HTTP_404_NOT_FOUND)
 
+
 class itemmaterials(APIView):
-            
-    def get(self , request , id , format = None):
-        mainitem = Item.objects.get(id = id)
-        parts = Part.objects.filter(item = mainitem)
+
+    def get(self, request, id, format=None):
+        mainitem = Item.objects.get(id=id)
+        parts = Part.objects.filter(item=mainitem)
         partslist = []
         materialslist = []
-        patternslist  = {}
-        for item in parts :
-            materials = ItemMaterials.objects.get(part = item).material.all()
+        patternslist = {}
+        for item in parts:
+            materials = ItemMaterials.objects.get(part=item).material.all()
             materialslist = []
             for itemm in materials:
-                patterns = Pattern.objects.filter(material = itemm)
-                patternslist  = {}
+                patterns = Pattern.objects.filter(material=itemm)
+                patternslist = {}
                 for itemmm in patterns:
-                        patternslist[itemmm.name] = {'code': itemmm.get_color(), 'icon': itemmm.get_icon(), 'pic': itemmm.get_pic() , 'shininess' : itemmm.shininess}
-                materialslist.append({'name' :  itemm.name , 'pic': itemm.get_map() , 'colors': patternslist})
-                defa = {'code': item.default.get_color(), 'icon': itemmm.get_icon(), 'pic': item.default.get_pic()  , 'shininess' : item.default.shininess}
-            partslist.append({'name': item.name , 'bump': materialslist , 'model': item.get_model() , 'default' : defa , 'patina': mainitem.patina, 'patinad': mainitem.patinad ,'bumpmap': item.get_map()})
+                    patternslist[itemmm.name] = {'code': itemmm.get_color(), 'icon': itemmm.get_icon(
+                    ), 'pic': itemmm.get_pic(), 'shininess': itemmm.shininess}
+                materialslist.append(
+                    {'name':  itemm.name, 'pic': itemm.get_map(), 'colors': patternslist})
+                defa = {'code': item.default.get_color(), 'icon': itemmm.get_icon(
+                ), 'pic': item.default.get_pic(), 'shininess': item.default.shininess, 'normal': itemm.get_map(), 'repeat': itemm.repeat}
+            partslist.append({'name': item.name, 'bump': materialslist, 'model': item.get_model(
+            ), 'default': defa, 'patina': mainitem.patina, 'patinad': mainitem.patinad, 'bumpmap': item.get_map()})
         print(partslist)
         return Response(partslist)
 
